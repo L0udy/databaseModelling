@@ -1,0 +1,49 @@
+# databaseModelling
+Student project of Simple database
+
+
+Shoe workshop „Fiskagon” is a workshop set in tiny locality. The company in a short span of time has earned considerable profit and reputation among local residents, that allowed the owner to  extend his activity and putting the second workshop in the biggest city in voivodship. A year ago the internet app for a client was created with visible products and telephone and e-mail contact to the shop. The company wants to order the information system, which would improve : 
+1.Picking the orders
+2.Accomplishing the orders 
+3.Shipping the orders 
+4.Payment service  
+5.Loyalty company for regular customers 
+System functioning will require creating database, which will store the data on the level of: 
+
+Customer Service 
+The client in person or through the app places an order on the shoes, giving his personal data limited to Name, Surname, City, Street, Numer of house / venue, postcode and phone number and opctional e-mail address additionally the client tells the employee which shoe he likes, and also the employee (or the client using the app) makes measurements of the client’s foot size defining:  Legth of the feet, width of the heel, width of forefoot, the client has to pay a fee beforethe order’s execution, when the commsion is accepted he will be granted unical Commision Number, the client receives an sms, mail or personally the number of his placed order. 
+ 
+Executing the Order 
+The workshop after accepting the client’s payment and the order filled in with the required data has to set a realization deadline and set the order’s status to „Processing the order” and also has to remember about the sequence of the orders realization, and the order receives the receipt or confirmation number. 
+ 
+The office and Warehouse 
+The office need to have access and preview to all orders and reports in the system, searching them by their number, and also needs to have preview to their realization status, when the client is calling the office, the office should be able to find the order or the client’s report also by his data. The client can receive the invoice however to do it he needs to personally call the office, there can only be one invoice issued for an order. 
+The office seeing the order or report with the status „Realized”, if it’s the order personally contacts the client informing him about the possibility of collecting his carefully made shoes, whereas if it’s the report the client must be notified by an automatic sms message. When the client using the app  payed the transport, it gets send to the warehouse where the package for shipping on the address given in the order is being prepared using local couriers. The order, which has been executed and sent receives a status „On its way to the client” and after receiving the information about delivering it by the courier, the order receives status „Closed” is stored in the base for two years. 
+ 
+Payment Service 
+The client makes payments  in the shop personally ot through the app before placing an order, after receiving the confirmation from a bank or after receiving the cash, only in the case of cash, the employee in the shop has to manually create the order and tick the option „Paid”, for the commision to proceed to further realization the amount of money that client spent needs to come. 
+ 
+Loyalty Campaign
+The company’s owner wants his clients to log in to his app using the codes they receive in the shop or throught mail along next purchases and granting discounts to those clients. The company only wants the information, which client has the status of the “regular” and, which places order the second time using the same phone number given. Specific cases: When the client changed his phone number or the next order is placed by the client’s partner, and the client demands the card, those situations have to be settled on the Comapny’s behalf, suitable people will be trained. 
+Other services
+ Besides placing orders on the shoes the Client can also choose the option of repair or cleaning which he needs to report personally in the establishment.
+ Repair
+ The client coming to the establishment can demand repairing the shoes (only the shoe, which the Company will allow or all produced by the „Fiskagon”) if they were produced by the company and they have warranty the report gets accepted and the employee has the obligation to get the client’s: order number, the date when the client noticed the defect, personal data  the client and his warranty card number and needs to set the date to when the complaint will be processed (on the warranty card) such report will be accepted as a complaint and has a status „Pending”. 
+
+ 
+ 
+If the shoes are excluded from the warrantyg, but they are ahoes that the workshop repairs then the customer is obliged to get the client’s personal data and inform him, if the office contacts the client within 24h to inform him about the costs of repair then creates a report with the status „Pricing”  or if it’s in the “out of hand” repairs schedule accepts the report immediately and sets status „Processing the order”. The workshop at that time prepares and after making it introduces to the parts system/ material  / labour and his price and also estimative repair date, then Changes status to „Awaiting the client’s decision” and after accepting the pricing „Processing „. 
+ 
+Cleaning 
+Cleaning is executed out of hand and there is no need to create a report, the client is provided with a receipt, which goes to the base with suitable type of service. 
+ 
+Finishing realizations
+Finishing the order and repairing receive status „Executes” and after delivering or collecting them „Closed” Specific cases: In case of when the client doesn’t come forward for the fixed equipment within a week the report receives the status „Awaiting the client’s decision” after 30 days and 10 unsuccessfull atempts to contact the client the report receives the status „Incorrect” and the company decides what to do next.
+
+Entities and their functionalities
+1.The Client – stores the client’s data, including his address.
+2.Addresses – stores City, street, house/venue nr, postcode of a specific client
+3.The order – stores the client’s data dane klienta, his order, has unique order number, status and accomplished payment, that is the receipt or confirmation number, service type (Repair or Order)
+4.Complaints/Reports – stores the client’s data, the reason of making a complaint, receipt (if the client has the receipt), the date of revealing the defect, the date of report in the workshop, Complaint/Report status, predicted date of ending the complaint.
+5.Services – stores id. of Three services available to the client 
+6.Payments – all receipts and confirmations are stored there along with their number and details such as: the paid amount, type of service, date of preparing.
