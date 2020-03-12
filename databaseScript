@@ -1,0 +1,329 @@
+cl scr;
+/*
+CREATE TABLE adres (
+    adres_id       NUMBER NOT NULL,
+    miasto         VARCHAR2(255 CHAR),
+    ulica          VARCHAR2(255 CHAR),
+    nr_domu        VARCHAR2(50 CHAR),
+    nr_lokalu      VARCHAR2(50 CHAR),
+    kod_pocztowy   VARCHAR2(255 CHAR)
+);
+
+
+ALTER TABLE adres ADD CONSTRAINT adres_pk PRIMARY KEY ( adres_id );
+
+CREATE TABLE katalog (
+    katalog_id       NUMBER NOT NULL,
+    nazwa_produktu   VARCHAR2(255 CHAR),
+    typ_podeszwy     VARCHAR2(255 CHAR),
+    material         VARCHAR2(255 CHAR)
+);
+
+ALTER TABLE katalog ADD CONSTRAINT katalog_pk PRIMARY KEY ( katalog_id );
+
+CREATE TABLE klient (
+    klient_id   NUMBER NOT NULL,
+    imie        VARCHAR2(255 CHAR),
+    nazwisko    VARCHAR2(255 CHAR),
+    telefon     NUMBER(15),
+    email       VARCHAR2(255 CHAR),
+    nr_buta     NUMBER(5),
+    adres_id    NUMBER NOT NULL
+);
+
+
+
+CREATE UNIQUE INDEX klient__idx ON
+    klient (
+        adres_id
+    ASC );
+
+ALTER TABLE klient ADD CONSTRAINT klient_pk PRIMARY KEY ( klient_id );
+
+CREATE TABLE zamowienie (
+    id_zamowienia          NUMBER(9) NOT NULL,
+    status_zamowienia      NUMBER(5),
+    numer_potw_transakji   NUMBER(20),
+    kolor                  VARCHAR2(255 CHAR),
+    termin_realizacji      DATE,
+    klient_id              NUMBER NOT NULL,
+    katalog_id             NUMBER NOT NULL
+);
+
+
+
+ALTER TABLE zamowienie ADD CONSTRAINT zamowienie_pk PRIMARY KEY ( id_zamowienia );
+
+CREATE TABLE zgloszenie (
+    id_zgloszenia           NUMBER(9) NOT NULL,
+    status_zgloszenia       NUMBER(9),
+    typ_zgloszenia          VARCHAR2(255 CHAR),
+    numer_potw_transakcji   NUMBER(25),
+    data_zgloszenia         DATE,
+    data_ujawnienia         DATE,
+    termin_realizacji       DATE,
+    klient_id               NUMBER NOT NULL
+);
+
+ALTER TABLE zgloszenie ADD CONSTRAINT zgloszenie_pk PRIMARY KEY ( id_zgloszenia );
+
+ALTER TABLE klient
+    ADD CONSTRAINT klient_adres_fk FOREIGN KEY ( adres_id )
+        REFERENCES adres ( adres_id );
+
+ALTER TABLE zamowienie
+    ADD CONSTRAINT zamowienie_katalog_fk FOREIGN KEY ( katalog_id )
+        REFERENCES katalog ( katalog_id );
+
+ALTER TABLE zamowienie
+    ADD CONSTRAINT zamowienie_klient_fk FOREIGN KEY ( klient_id )
+        REFERENCES klient ( klient_id );
+
+ALTER TABLE zgloszenie
+    ADD CONSTRAINT zgloszenie_klient_fk FOREIGN KEY ( klient_id )
+        REFERENCES klient ( klient_id );
+
+
+-- -------------------------------------------------------------------------------
+-- POLECENIA:   5 X INSERT  DO WSZYSTKICH TABEL                                               
+-- -------------------------------------------------------------------------------
+
+INSERT INTO adres VALUES (1,'Radom','jedyna','46c',NULL,'50-723');
+INSERT INTO adres VALUES (2,'Trzebnica','świebodzińska','12','6','21-400');
+INSERT INTO adres VALUES (3,'Warszawa','pl.Wolności','55/54','8','04-415');
+INSERT INTO adres VALUES (4,'Kraków','powstańców stalingradu','80','2','05-801');
+INSERT INTO adres VALUES (5,'Oborniki','Górna','8a',NULL,'05-029');
+
+
+
+
+
+
+INSERT INTO klient VALUES (1,'Zbigniew','Stonoga',715273306,'zbysiu.stonek@buziaczek.pl',43,1);
+INSERT INTO klient VALUES (2,'Ryszard','Pietro',416789900,'r.piet1987@o2.pl',47,2);
+INSERT INTO klient VALUES (3,'Genowefa','Igwa',415620007,'mamuska_23@sympatia.pl',38,3);
+INSERT INTO klient VALUES (4,'Kamil','Lisek',789500492,'kmlis@gmail.com',40,4);
+INSERT INTO klient VALUES (5,'Marek','Kotowski',512672115,'kotekem@psotek.pl',43,5);
+
+
+INSERT INTO katalog VALUES (1,'Karol','Trzewik','Filc');
+INSERT INTO katalog VALUES (2,'Seweryn','Pantofel','Filc');
+INSERT INTO katalog VALUES (3,'Agnis','Trzewik','Skóra');
+INSERT INTO katalog VALUES (4,'Lans','Sportowa','Syntetyk');
+INSERT INTO katalog VALUES (5,'Frania','Obcas','Skóra');
+
+INSERT INTO zamowienie VALUES (1,1,0447,'Czarny','2020-01-02',1,2);
+INSERT INTO zamowienie VALUES (2,1,0443,'Błękitny','2020-01-12',2,4);
+INSERT INTO zamowienie VALUES (3,2,0441,'Czarny','2019-12-27',3,5);
+INSERT INTO zamowienie VALUES (4,3,0440,'Biały','2019-12-15',4,4);
+INSERT INTO zamowienie VALUES (5,4,0436,'Turkus','2019-12-10',5,2);
+
+INSERT INTO zgloszenie VALUES (1,1,'Serwisowanie',900032,'2019-10-12','2019-08-12','2019-12-15',1);
+INSERT INTO zgloszenie VALUES (2,1,'Serwisowanie',900013,'2019-12-10','2019-12-10','2019-12-20',2);
+INSERT INTO zgloszenie VALUES (3,2,'Reklamacja',4843,'2019-12-06','2019-12-05','2019-12-14',3);
+INSERT INTO zgloszenie VALUES (4,2,'Serwisowanie',900030,'2019-12-12','2019-12-10','2019-12-20',3);
+INSERT INTO zgloszenie VALUES (5,3,'Serwisowanie',900009,'2019-12-02','2019-11-30','2019-12-08',5);
+
+*/
+
+/*  
+
+DROP TABLE ZAMOWIENIE;
+
+DROP TABLE ZGLOSZENIE;
+
+DROP TABLE KLIENT;
+
+DROP TABLE KATALOG;
+
+DROP TABLE  ADRES;
+
+*/
+----------------------------------------------------------------------------------------------------------------------------------------------------WYZWALACZE
+/*
+CREATE TRIGGER brak_koloru
+BEFORE INSERT ON zamowienie
+FOR EACH ROW
+BEGIN
+  IF ((:new.kolor) = 'Turkus') THEN
+  raise_application_error(-20000,'kolor Aktualnie niedostępny');
+ END IF;
+END;
+/
+INSERT INTO zamowienie VALUES (8,4,0436,'Turkus','2019-12-10',5,2);
+
+
+drop trigger brak_koloru;
+*/
+/*
+CREATE OR REPLACE TRIGGER klient_rozmiar 
+BEFORE INSERT OR UPDATE OF nr_buta ON klient
+FOR EACH ROW
+BEGIN
+ IF ((:new.nr_buta < 35) or (:new.nr_buta > 50))
+ THEN
+RAISE_APPLICATION_ERROR(-20011,'Nie posiadamy takich rozmiarow dla tego klienta');
+ END IF;
+END;
+/
+INSERT INTO klient VALUES (7,'Zbigniew','Stonoga',715273306,'zbysiu.stonek@buziaczek.pl',45,6);
+
+drop trigger klient_rozmiar;
+*/
+/*
+CREATE OR REPLACE TRIGGER zakonczenie_zgloszenia
+BEFORE INSERT ON zgloszenie
+FOR EACH ROW
+BEGIN 
+IF (:new.data_zgloszenia > :new.termin_realizacji )
+THEN
+RAISE_APPLICATION_ERROR(-20009,'realizacja nie może się odbyć przed zgoszeniem');
+END IF;
+END;
+/
+INSERT INTO zgloszenie VALUES (6,1,'Serwisowanie',900032,'2019-10-12','2019-08-12','2019-10-9',1);
+
+drop trigger zakonczenie_zgloszenia;
+*/
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------PROCEDURY
+
+/*
+CREATE OR REPLACE PROCEDURE mieszka_klient
+(a_miasto IN varchar2, p_ile_klientow OUT number) IS
+CURSOR c_klienci IS
+     SELECT * FROM klient WHERE adres_id IN (
+	       SELECT adres_id FROM adres WHERE UPPER(miasto) = UPPER(a_miasto));
+v_klient klient%ROWTYPE;
+BEGIN
+     SELECT COUNT(*) INTO p_ile_klientow
+	 FROM klient WHERE adres_id IN (
+	       SELECT adres_id FROM adres WHERE miasto = a_miasto);
+     FOR cur_rec IN c_klienci LOOP
+	   IF (cur_rec.klient_id < 3) THEN
+	    DBMS_OUTPUT.PUT_LINE 
+		             ('Klient' || cur_rec.nazwisko || 'ma 30% zniżki');
+		END IF;
+	END LOOP;
+EXCEPTION 
+     WHEN NO_DATA_FOUND THEN
+	       DBMS_OUTPUT.PUT_LINE ('W miesjcowości '||a_miasto|| 'nie mieszka żaden z naszych klientow');
+END mieszka_klient;
+/
+
+
+
+DECLARE 
+p_out NUMBER :=0;
+BEGIN
+mieszka_klient('Warszawa', p_out);
+DBMS_OUTPUT.PUT_LINE('W tej miesjcowości mieszka ' || p_out || 'Klientow');
+END;
+/
+
+drop procedure mieszka_klient;
+*/
+
+/*
+
+CREATE OR REPLACE PROCEDURE ile_dni
+(a_id_zgloszenia IN number, p_ile_dni OUT number) IS
+CURSOR c_zgloszenia IS
+     SELECT * FROM zgloszenie WHERE id_zgloszenia = a_id_zgloszenia;
+v_zgloszenie zgloszenie%ROWTYPE;
+BEGIN
+     SELECT termin_realizacji - data_zgloszenia INTO p_ile_dni
+	 FROM zgloszenie WHERE id_zgloszenia = a_id_zgloszenia;
+     FOR cur_rec IN c_zgloszenia LOOP
+	   IF (cur_rec.status_zgloszenia = 3) THEN
+	    DBMS_OUTPUT.PUT_LINE 
+		             ('Zgloszenie ' || cur_rec.id_zgloszenia || ' zrealizowano');
+		END IF;
+	END LOOP;
+EXCEPTION 
+     WHEN NO_DATA_FOUND THEN
+	       DBMS_OUTPUT.PUT_LINE ('nie ma takiego zgloszenia');
+END ile_dni;
+/
+
+DECLARE 
+p_in NUMBER := &id_zgloszenia;
+p_out NUMBER :=0;
+BEGIN
+ile_dni(p_in, p_out);
+DBMS_OUTPUT.PUT_LINE('Do zrealizowania zostalo ' || p_out || 'dni');
+END;
+/
+
+drop procedure ile_dni;
+
+
+
+*/
+
+/*
+CREATE OR REPLACE FUNCTION rozmiary_US (v_rozmiar IN number)
+RETURN number IS
+BEGIN
+IF ((v_rozmiar >= 36) AND (v_rozmiar < 38)) THEN
+       RETURN (v_rozmiar - 36 + 4);
+ ELSE IF ((v_rozmiar >= 38) AND (v_rozmiar < 40)) THEN
+           RETURN (v_rozmiar - 36 + 3.5);
+     ELSE IF ((v_rozmiar >= 40) AND (v_rozmiar < 42)) THEN
+            RETURN (v_rozmiar - 36 + 3);
+         ELSE IF ((v_rozmiar >= 42) AND (v_rozmiar < 44)) THEN
+                RETURN (v_rozmiar - 36 + 2.5);
+            ELSE IF ((v_rozmiar >= 44) AND (v_rozmiar < 46)) THEN
+                  RETURN (v_rozmiar - 36 + 2);
+                ELSE IF ((v_rozmiar >= 46) AND (v_rozmiar < 48)) THEN
+                     RETURN (v_rozmiar - 36 + 1.5);
+                 END IF;
+             END IF;
+          END IF;
+      END IF;
+ END IF;
+END IF;
+END rozmiary_US;
+/
+CREATE OR REPLACE PROCEDURE but_USA
+(a_nr_buta IN number, p_nr_buta_us OUT number , p_ilosc_klientow OUT number) IS
+CURSOR c_zamowienie IS
+     SELECT * FROM zamowienie WHERE klient_id IN ( 
+      SELECT klient_id FROM klient WHERE nr_buta = a_nr_buta);
+v_zamowienie zamowienie%ROWTYPE;
+v_klient klient%ROWTYPE;
+BEGIN
+     SELECT rozmiary_US(nr_buta) INTO p_nr_buta_us
+	 FROM klient WHERE nr_buta = a_nr_buta;
+       SELECT COUNT(*) INTO p_ilosc_klientow 
+       FROM zamowienie WHERE klient_id IN ( 
+           SELECT klient_id FROM klient WHERE nr_buta = a_nr_buta);
+     FOR cur_rec IN c_zamowienie LOOP
+	   IF (cur_rec.status_zamowienia = 3) THEN
+	    DBMS_OUTPUT.PUT_LINE 
+		             ('Zamowienie ' || cur_rec.id_zamowienia || ' zrealizowano');
+		END IF;
+	END LOOP;
+EXCEPTION 
+     WHEN NO_DATA_FOUND THEN
+	       DBMS_OUTPUT.PUT_LINE ('nie ma klienta z takim rozmiarem');
+END but_USA;
+/
+
+
+SELECT rozmiary_us(nr_buta) FROM klient WHERE nr_buta = 40;
+
+DECLARE 
+p_in NUMBER := &nr_buta;
+p_out NUMBER :=0;
+a_out NUMBER :=0;
+BEGIN
+but_USA(p_in, p_out, a_out);
+DBMS_OUTPUT.PUT_LINE('Na numer buta EU' ||p_in || ' US' || p_out || ' jest ' || a_out || ' zamowien' );
+END;
+/
+
+drop procedure but_USA;
+drop function rozmiary_US;
+
+*/
